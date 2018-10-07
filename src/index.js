@@ -1,25 +1,40 @@
 module.exports = function getZerosCount(number, base) {
  
-  let countzeros=0;
-  let counttwo=1; 
+let countzeros=0;
+let maxDevider=0;
+let countMaxDevider=0;
+let copyBase=base;
 
-  while ((base%2==0) && (base!==2)){
-    base=base/2;
-    counttwo++;
+let k=2; // k-devider
+// find max devider
+while ( k<=copyBase ){
+  if(copyBase%k===0 && (copyBase/k===1)){
+  copyBase=copyBase/k;
+   maxDevider=k;
+}  else  if(copyBase%k===0){
+    copyBase=copyBase/k;  
   }
-    for (let k=3; k<base; k++){
-    if((base%k)!==0){
-      continue;
-    }else if((base%k)==0){
-      base=base/k;
-      }
-  }
-   let i=1;
-   while((number/Math.pow(base,i))>=1){
-      countzeros+=Math.floor(number/Math.pow(base,i));
-      i++;
-  }
-  if (base===2){
-  return Math.floor(countzeros/counttwo);
-  } else return countzeros; 
+  else if((copyBase%k)!==0){
+  k++;
+   } 
+}
+// compare value 2^ and max devider^
+while (base%maxDevider===0){
+  base=base/maxDevider;
+  countMaxDevider++;
+}
+if (Math.log2(base)>=Math.pow(maxDevider, countMaxDevider)){
+  maxDevider=2;
+  countMaxDevider=Math.log2(base);
+} else if (Math.log2(base)<Math.pow(maxDevider, countMaxDevider)){
+  maxDevider=maxDevider;
+  countMaxDevider=countMaxDevider;
+}
+//count countzeros factorial
+ let i=1;
+ while((number/Math.pow(maxDevider,i))>=1){
+    countzeros+=Math.floor(number/Math.pow(maxDevider,i)); 
+    i++;
+}
+  return Math.floor(countzeros/countMaxDevider);
 }
